@@ -1,7 +1,7 @@
 # Личный проект «Readme»
 
 * Студент: [Александр Батолло](https://up.htmlacademy.ru/php/12/user/65755).
-* Наставник: [Сергей Рожков](https://up.htmlacademy.ru/php/12/user/1069033).
+* Наставник: [Анастасия Смирнова](https://up.htmlacademy.ru/php/12/user/232838).
 
 ---
 
