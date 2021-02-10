@@ -1,4 +1,6 @@
 <?php
+define("MAX_POST_STRING_LENGTH", 300);
+
 $is_auth = rand(0, 1);
 
 $user_name = 'Александр Батолло'; // укажите здесь ваше имя
@@ -40,6 +42,39 @@ $posts = [
         'avatar' => 'userpic.jpg'
     ]
 ];
+
+function check_content_length(string $post_content): string
+{
+    $is_excerpted = false;
+
+    if (strlen($post_content) > MAX_POST_STRING_LENGTH) {
+        $post_content = get_content_excerpt($post_content);
+        $is_excerpted = true;
+    }
+
+    $post_content = "<p> ${post_content} </p>";
+
+    if ($is_excerpted) {
+        $post_content .= '<a class="post-text__more-link" href="#">Читать далее</a>';
+    }
+
+    return $post_content;
+}
+
+function get_content_excerpt(string $post_content): string
+{
+    $exploded_post_string = explode(" ", $post_content);
+    $string_length_counter = MAX_POST_STRING_LENGTH;
+    for ($i = 0, $j = count($exploded_post_string); $i < $j ; $i++) {
+        $string_length_counter -= strlen($exploded_post_string[$i]);
+        if ($string_length_counter <= 0) {
+            break;
+        }
+    }
+    $post_content = rtrim(implode(" ", array_slice($exploded_post_string, 0, $i))) . '&hellip;';
+
+    return $post_content;
+}
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -262,7 +297,7 @@ $posts = [
                         </blockquote>
                     <?php } elseif ($post['type'] === 'post-text') {?>
                         <!--содержимое для поста-текста-->
-                        <p><?=$post['content']?></p>
+                        <?=check_content_length($post['content'])?>
                     <?php } elseif ($post['type'] === 'post-photo') {?>
                         <!--содержимое для поста-фото-->
                         <div class="post-photo__image-wrapper">
