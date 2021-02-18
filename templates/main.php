@@ -84,7 +84,7 @@
         </div>
     </div>
     <div class="popular__posts">
-        <?php foreach ($posts as $post) { ?>
+        <?php foreach ($posts as $post_key => $post) { ?>
             <article class="popular__post post <?=$post['type']?>">
                 <header class="post__header">
                     <h2>
@@ -153,7 +153,13 @@
                                     <!--здесь имя пользователя-->
                                     <?= esc($post['username']) ?>
                                 </b>
-                                <time class="post__time" datetime="">дата</time>
+                                <time
+                                    class="post__time"
+                                    datetime="<?= $random_date = generate_random_date($post_key) ?>"
+                                    title="<?= get_formatted_date($random_date) ?>"
+                                >
+                                    <?= get_human_time_diff($random_date) ?>
+                                </time>
                             </div>
                         </a>
                     </div>
