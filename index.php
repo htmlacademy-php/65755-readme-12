@@ -5,6 +5,8 @@ use JetBrains\PhpStorm\Pure;
 require_once('helpers.php');
 
 define("MAX_POST_STRING_LENGTH", 300);
+define("DAYS_IN_WEEK", 7);
+define("MAX_WEEKS_DAYS", 5 * DAYS_IN_WEEK);
 
 $page_title = "readme: популярное";
 
@@ -50,6 +52,38 @@ $posts_col = [
         'avatar' => 'userpic.jpg'
     ]
 ];
+
+function get_human_time_diff(string $event_date): string
+{
+    $comparative_date = DateTime::createFromFormat('Y-m-d H:i:s', $event_date);
+    $current_date = new DateTime('now', new DateTimeZone('Europe/Moscow'));
+    $diff = $comparative_date->diff($current_date);
+
+    if ($diff->y !== 0) {
+        $human_time_diff = $diff->y . ' ' . get_noun_plural_form($diff->y, 'год', 'года', 'лет');
+    } elseif ($diff->m !== 0) {
+        $human_time_diff = $diff->m . ' ' . get_noun_plural_form($diff->m, 'месяц', 'месяца', 'месяцев');
+    } elseif ($diff->d >= DAYS_IN_WEEK && $diff->d < MAX_WEEKS_DAYS) {
+        $human_time_diff = $diff->d / 7 . ' ' . get_noun_plural_form($diff->d / 7, 'неделя', 'недели', 'недель');
+    } elseif ($diff->d > 0 && $diff->d < DAYS_IN_WEEK) {
+        $human_time_diff = $diff->d . ' ' . get_noun_plural_form($diff->d, 'день', 'дня', 'дней');
+    } elseif ($diff->h !== 0) {
+        $human_time_diff = $diff->h . ' ' . get_noun_plural_form($diff->h, 'час', 'часа', 'часов');
+    } elseif ($diff->i !== 0) {
+        $human_time_diff = $diff->i . ' ' . get_noun_plural_form($diff->i, 'минута', 'минуты', 'минут');
+    } elseif ($diff->s !== 0) {
+        $human_time_diff = $diff->s . ' ' . get_noun_plural_form($diff->s, 'секунда', 'секунды', 'секунд');
+    } else {
+        $human_time_diff = 'Неизвестный интервал';
+    }
+
+    return $human_time_diff;
+}
+
+function get_formatted_date(string $raw_date): string
+{
+    return DateTime::createFromFormat('Y-m-d H:i:s', $raw_date)->format('Y-m-d H:i');
+}
 
 function check_content_length(string $post_content): string
 {
