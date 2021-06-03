@@ -14,45 +14,6 @@ $is_auth = rand(0, 1);
 
 $user_name = 'Александр Батолло';
 
-// двумерный массив с постами
-$posts_col = [
-    [
-        'heading' => 'Цитата',
-        'type' => 'post-quote',
-        'content' => 'Мы в жизни любим только раз, а после ищем лишь похожих',
-        'username' => 'Лариса',
-        'avatar' => 'userpic-larisa-small.jpg'
-    ],
-    [
-        'heading' => 'Игра престолов',
-        'type' => 'post-text',
-        'content' => 'Не могу дождаться начала финального сезона своего любимого сериала!',
-        'username' => 'Владик',
-        'avatar' => 'userpic.jpg'
-    ],
-    [
-        'heading' => 'Наконец, обработал фотки!',
-        'type' => 'post-photo',
-        'content' => 'rock-medium.jpg',
-        'username' => 'Виктор',
-        'avatar' => 'userpic-mark.jpg'
-    ],
-    [
-        'heading' => 'Моя мечта',
-        'type' => 'post-photo',
-        'content' => 'coast-medium.jpg',
-        'username' => 'Лариса',
-        'avatar' => 'userpic-larisa-small.jpg'
-    ],
-    [
-        'heading' => 'Лучшие курсы',
-        'type' => 'post-link',
-        'content' => 'www.htmlacademy.ru',
-        'username' => 'Владик',
-        'avatar' => 'userpic.jpg'
-    ]
-];
-
 function get_human_time_diff(string $event_date): string
 {
     $comparative_date = DateTime::createFromFormat('Y-m-d H:i:s', $event_date);
@@ -123,8 +84,36 @@ function get_content_excerpt(string $post_content): string
     return htmlspecialchars($str);
 }
 
-// HTML-код главной страницы
-$page_content = include_template('main.php', ['posts' => $posts_col]);
+require_once 'init.php';
+
+if (!$link) {
+    $error = mysqli_connect_error();
+    $content = include_template('error.php', ['error' => $error]);
+}
+else {
+    $sql = 'SELECT * FROM content_types';
+    $result = mysqli_query($link, $sql);
+
+    if ($result) {
+        $content_types_col = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+        $sql = 'SELECT * FROM posts JOIN users ON post_author_id = user_id JOIN content_types ON post_type_id = content_type_id ORDER BY post_views_count DESC';
+        $result = mysqli_query($link, $sql);
+
+        if ($result) {
+            $posts_col = mysqli_fetch_all($result, MYSQLI_ASSOC);
+            // HTML-код главной страницы
+            $page_content = include_template('main.php', ['posts' => $posts_col, 'content_types' => $content_types_col]);
+        } else {
+            $error = mysqli_error($link);
+            $page_content = include_template('error.php', ['error' => $error]);
+        }
+    }
+    else {
+        $error = mysqli_error($link);
+        $page_content = include_template('error.php', ['error' => $error]);
+    }
+}
 
 // окончательный HTML-код
 $layout_content = include_template('layout.php', ['content' => $page_content, 'title' => $page_title, 'user_name' => $user_name, 'is_auth' => $is_auth]);

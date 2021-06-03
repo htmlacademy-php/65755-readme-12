@@ -1,8 +1,8 @@
-INSERT INTO content_types (content_type_name, content_type_class) VALUES ('Цитата', 'post-quote');
-INSERT INTO content_types (content_type_name, content_type_class) VALUES ('Текст', 'post-text');
-INSERT INTO content_types (content_type_name, content_type_class) VALUES ('Фото', 'post-photo');
-INSERT INTO content_types (content_type_name, content_type_class) VALUES ('Видео', 'post-video');
-INSERT INTO content_types (content_type_name, content_type_class) VALUES ('Ссылка', 'post-link');
+INSERT INTO content_types (content_type_name, content_type_class) VALUES ('Цитата', 'quote');
+INSERT INTO content_types (content_type_name, content_type_class) VALUES ('Текст', 'text');
+INSERT INTO content_types (content_type_name, content_type_class) VALUES ('Фото', 'photo');
+INSERT INTO content_types (content_type_name, content_type_class) VALUES ('Видео', 'video');
+INSERT INTO content_types (content_type_name, content_type_class) VALUES ('Ссылка', 'link');
 
 INSERT INTO users (user_email, user_login, user_password, user_avatar) VALUES ('larisa@example.com', 'Лариса' , 'password', 'userpic-larisa-small.jpg');
 INSERT INTO users (user_email, user_login, user_password, user_avatar) VALUES ('vladik@example.com', 'Владик' , 'wordpass', 'userpic.jpg');

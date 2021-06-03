@@ -40,96 +40,66 @@
                         <span>Все</span>
                     </a>
                 </li>
-                <li class="popular__filters-item filters__item">
-                    <a class="filters__button filters__button--photo button" href="#">
-                        <span class="visually-hidden">Фото</span>
-                        <svg class="filters__icon" width="22" height="18">
-                            <use xlink:href="#icon-filter-photo"></use>
-                        </svg>
-                    </a>
-                </li>
-                <li class="popular__filters-item filters__item">
-                    <a class="filters__button filters__button--video button" href="#">
-                        <span class="visually-hidden">Видео</span>
-                        <svg class="filters__icon" width="24" height="16">
-                            <use xlink:href="#icon-filter-video"></use>
-                        </svg>
-                    </a>
-                </li>
-                <li class="popular__filters-item filters__item">
-                    <a class="filters__button filters__button--text button" href="#">
-                        <span class="visually-hidden">Текст</span>
-                        <svg class="filters__icon" width="20" height="21">
-                            <use xlink:href="#icon-filter-text"></use>
-                        </svg>
-                    </a>
-                </li>
-                <li class="popular__filters-item filters__item">
-                    <a class="filters__button filters__button--quote button" href="#">
-                        <span class="visually-hidden">Цитата</span>
-                        <svg class="filters__icon" width="21" height="20">
-                            <use xlink:href="#icon-filter-quote"></use>
-                        </svg>
-                    </a>
-                </li>
-                <li class="popular__filters-item filters__item">
-                    <a class="filters__button filters__button--link button" href="#">
-                        <span class="visually-hidden">Ссылка</span>
-                        <svg class="filters__icon" width="21" height="18">
-                            <use xlink:href="#icon-filter-link"></use>
-                        </svg>
-                    </a>
-                </li>
+                <?php foreach ($content_types as $content_type_key => $content_type) { ?>
+                    <li class="popular__filters-item filters__item">
+                        <a class="filters__button filters__button--<?= $content_type['content_type_class'] ?> button" href="#">
+                            <span class="visually-hidden"><?= $content_type['content_type_name'] ?></span>
+                            <svg class="filters__icon" width="22" height="18">
+                                <use xlink:href="#icon-filter-<?= $content_type['content_type_class'] ?>"></use>
+                            </svg>
+                        </a>
+                    </li>
+                <?php } ?>
             </ul>
         </div>
     </div>
     <div class="popular__posts">
         <?php foreach ($posts as $post_key => $post) { ?>
-            <article class="popular__post post <?=$post['type']?>">
+            <article class="popular__post post <?=$post['content_type_class']?>">
                 <header class="post__header">
                     <h2>
                         <!--здесь заголовок-->
-                        <?= esc($post['heading']) ?>
+                        <?= esc($post['post_title']) ?>
                     </h2>
                 </header>
                 <div class="post__main">
                     <!--здесь содержимое карточки-->
-                    <?php if ($post['type'] === 'post-quote') { ?>
+                    <?php if ($post['content_type_class'] === 'quote') { ?>
                         <!--содержимое для поста-цитаты-->
                         <blockquote>
                             <p>
-                                <?= esc($post['content']) ?>
+                                <?= esc($post['post_content']) ?>
                             </p>
                             <cite>Неизвестный Автор</cite>
                         </blockquote>
-                    <?php } elseif ($post['type'] === 'post-text') {?>
+                    <?php } elseif ($post['content_type_class'] === 'text') {?>
                         <!--содержимое для поста-текста-->
-                        <?= check_content_length($post['content']) ?>
-                    <?php } elseif ($post['type'] === 'post-photo') {?>
+                        <?= check_content_length($post['post_content']) ?>
+                    <?php } elseif ($post['content_type_class'] === 'photo') {?>
                         <!--содержимое для поста-фото-->
                         <div class="post-photo__image-wrapper">
-                            <img src="img/<?=$post['content']?>" alt="Фото от пользователя" width="360" height="240">
+                            <img src="img/<?=$post['post_content']?>" alt="Фото от пользователя" width="360" height="240">
                         </div>
-                    <?php } elseif ($post['type'] === 'post-link') {?>
+                    <?php } elseif ($post['content_type_class'] === 'link') {?>
                         <!--содержимое для поста-ссылки-->
                         <div class="post-link__wrapper">
-                            <a class="post-link__external" href="http://<?= $post['content'] ?>" title="Перейти по ссылке">
+                            <a class="post-link__external" href="http://<?= $post['post_content'] ?>" title="Перейти по ссылке">
                                 <div class="post-link__info-wrapper">
                                     <div class="post-link__icon-wrapper">
-                                        <img src="https://www.google.com/s2/favicons?domain=<?= $post['content'] ?>" alt="Иконка">
+                                        <img src="https://www.google.com/s2/favicons?domain=<?= $post['post_content'] ?>" alt="Иконка">
                                     </div>
                                     <div class="post-link__info">
-                                        <h3><?= esc($post['content']) ?></h3>
+                                        <h3><?= esc($post['post_content']) ?></h3>
                                     </div>
                                 </div>
-                                <span><?= esc($post['content']) ?></span>
+                                <span><?= esc($post['post_content']) ?></span>
                             </a>
                         </div>
-                    <?php } elseif ($post['type'] === 'post-video') {?>
+                    <?php } elseif ($post['content_type_class'] === 'video') {?>
                         <!--содержимое для поста-видео-->
                         <div class="post-video__block">
                             <div class="post-video__preview">
-                                <?php embed_youtube_cover($post['content']); ?>
+                                <?php embed_youtube_cover($post['post_content']); ?>
                                 <img src="img/coast-medium.jpg" alt="Превью к видео" width="360" height="188">
                             </div>
                             <a href="post-details.html" class="post-video__play-big button">
@@ -146,12 +116,12 @@
                         <a class="post__author-link" href="#" title="Автор">
                             <div class="post__avatar-wrapper">
                                 <!--укажите путь к файлу аватара-->
-                                <img class="post__author-avatar" src="img/<?= $post['avatar'] ?>" alt="Аватар пользователя">
+                                <img class="post__author-avatar" src="img/<?= $post['user_avatar'] ?>" alt="Аватар пользователя">
                             </div>
                             <div class="post__info">
                                 <b class="post__author-name">
                                     <!--здесь имя пользователя-->
-                                    <?= esc($post['username']) ?>
+                                    <?= esc($post['user_login']) ?>
                                 </b>
                                 <time
                                     class="post__time"
