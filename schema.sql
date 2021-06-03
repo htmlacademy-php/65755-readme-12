@@ -1,6 +1,10 @@
+CREATE DATABASE readme;
+
+USE readme;
+
 CREATE TABLE users (
   user_id BIGINT AUTO_INCREMENT PRIMARY KEY,
-  user_email TINYTEXT NOT NULL UNIQUE,
+  user_email VARCHAR(255) NOT NULL UNIQUE,
   user_login TINYTEXT,
   user_password TINYTEXT,
   user_avatar TINYTEXT
@@ -16,8 +20,8 @@ CREATE TABLE posts (
   post_featured_video TINYTEXT,
   post_source_link TINYTEXT,
   post_views_count BIGINT DEFAULT 0,
-  post_author BIGINT NOT NULL,
-  post_type BIGINT,
+  post_author_id BIGINT NOT NULL,
+  post_type_id BIGINT,
   post_tags_list TINYTEXT
 );
 
@@ -25,7 +29,7 @@ CREATE TABLE comments (
   comment_id BIGINT AUTO_INCREMENT PRIMARY KEY,
   comment_datetime DATETIME DEFAULT CURRENT_TIMESTAMP,
   comment_content LONGTEXT,
-  comment_author BIGINT NOT NULL,
+  comment_author_id BIGINT NOT NULL,
   comment_post_id BIGINT NOT NULL
 );
 
@@ -49,7 +53,7 @@ CREATE TABLE messages (
   message_to_user_id BIGINT NOT NULL
 );
 
-CREATE TABLE hastags (
+CREATE TABLE hashtags (
   hashtag_id BIGINT AUTO_INCREMENT PRIMARY KEY,
   hashtag_content TINYTEXT
 );
