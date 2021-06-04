@@ -199,7 +199,7 @@
     </div>
 </header>
 
-<section class="page__main page__main--popular">
+<section class="page__main <?= $modifier ?>">
     <?php print($content); ?>
 </section>
 

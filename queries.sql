@@ -8,6 +8,9 @@ INSERT INTO users (user_email, user_login, user_password, user_avatar) VALUES ('
 INSERT INTO users (user_email, user_login, user_password, user_avatar) VALUES ('vladik@example.com', 'Владик' , 'wordpass', 'userpic.jpg');
 INSERT INTO users (user_email, user_login, user_password, user_avatar) VALUES ('виктор@пример.рф', 'Виктор' , 'пароль', 'userpic-mark.jpg');
 
+# Эльвира Хайпулинова
+# img/userpic-elvira.jpg
+
 INSERT INTO comments (comment_content, comment_author_id, comment_post_id) VALUES ('Lorem ipsum', 3, 1);
 INSERT INTO comments (comment_content, comment_author_id, comment_post_id) VALUES ('Первый!', 2, 2);
 INSERT INTO comments (comment_content, comment_author_id, comment_post_id) VALUES ('Ура!', 1, 3);
