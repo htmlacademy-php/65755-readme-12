@@ -36,13 +36,15 @@
             <b class="popular__filters-caption filters__caption">Тип контента:</b>
             <ul class="popular__filters-list filters__list">
                 <li class="popular__filters-item popular__filters-item--all filters__item filters__item--all">
-                    <a class="filters__button filters__button--ellipse filters__button--all filters__button--active" href="#">
+                    <a class="filters__button filters__button--ellipse filters__button--all filters__button--active"
+                       href="#">
                         <span>Все</span>
                     </a>
                 </li>
                 <?php foreach ($content_types as $content_type_key => $content_type) { ?>
                     <li class="popular__filters-item filters__item">
-                        <a class="filters__button filters__button--<?= $content_type['content_type_class'] ?> button" href="#">
+                        <a class="filters__button filters__button--<?= $content_type['content_type_class'] ?> button"
+                           href="#">
                             <span class="visually-hidden"><?= $content_type['content_type_name'] ?></span>
                             <svg class="filters__icon" width="22" height="18">
                                 <use xlink:href="#icon-filter-<?= $content_type['content_type_class'] ?>"></use>
@@ -55,7 +57,7 @@
     </div>
     <div class="popular__posts">
         <?php foreach ($posts as $post_key => $post) { ?>
-            <article class="popular__post post <?=$post['content_type_class']?>">
+            <article class="popular__post post <?= "post-" . $post['content_type_class'] ?>">
                 <header class="post__header">
                     <h2>
                         <!--здесь заголовок-->
@@ -72,21 +74,25 @@
                             </p>
                             <cite>Неизвестный Автор</cite>
                         </blockquote>
-                    <?php } elseif ($post['content_type_class'] === 'text') {?>
+                    <?php } elseif ($post['content_type_class'] === 'text') { ?>
                         <!--содержимое для поста-текста-->
                         <?= check_content_length($post['post_content']) ?>
-                    <?php } elseif ($post['content_type_class'] === 'photo') {?>
+                    <?php } elseif ($post['content_type_class'] === 'photo') { ?>
                         <!--содержимое для поста-фото-->
                         <div class="post-photo__image-wrapper">
-                            <img src="img/<?=$post['post_content']?>" alt="Фото от пользователя" width="360" height="240">
+                            <img src="img/<?= $post['post_content'] ?>" alt="Фото от пользователя" width="360"
+                                 height="240">
                         </div>
-                    <?php } elseif ($post['content_type_class'] === 'link') {?>
+                    <?php } elseif ($post['content_type_class'] === 'link') { ?>
                         <!--содержимое для поста-ссылки-->
                         <div class="post-link__wrapper">
-                            <a class="post-link__external" href="http://<?= $post['post_content'] ?>" title="Перейти по ссылке">
+                            <a class="post-link__external" href="http://<?= $post['post_content'] ?>"
+                               title="Перейти по ссылке">
                                 <div class="post-link__info-wrapper">
                                     <div class="post-link__icon-wrapper">
-                                        <img src="https://www.google.com/s2/favicons?domain=<?= $post['post_content'] ?>" alt="Иконка">
+                                        <img
+                                            src="https://www.google.com/s2/favicons?domain=<?= $post['post_content'] ?>"
+                                            alt="Иконка">
                                     </div>
                                     <div class="post-link__info">
                                         <h3><?= esc($post['post_content']) ?></h3>
@@ -95,7 +101,7 @@
                                 <span><?= esc($post['post_content']) ?></span>
                             </a>
                         </div>
-                    <?php } elseif ($post['content_type_class'] === 'video') {?>
+                    <?php } elseif ($post['content_type_class'] === 'video') { ?>
                         <!--содержимое для поста-видео-->
                         <div class="post-video__block">
                             <div class="post-video__preview">
@@ -116,7 +122,8 @@
                         <a class="post__author-link" href="#" title="Автор">
                             <div class="post__avatar-wrapper">
                                 <!--укажите путь к файлу аватара-->
-                                <img class="post__author-avatar" src="img/<?= $post['user_avatar'] ?>" alt="Аватар пользователя">
+                                <img class="post__author-avatar" src="img/<?= $post['user_avatar'] ?>"
+                                     alt="Аватар пользователя">
                             </div>
                             <div class="post__info">
                                 <b class="post__author-name">
@@ -139,7 +146,8 @@
                                 <svg class="post__indicator-icon" width="20" height="17">
                                     <use xlink:href="#icon-heart"></use>
                                 </svg>
-                                <svg class="post__indicator-icon post__indicator-icon--like-active" width="20" height="17">
+                                <svg class="post__indicator-icon post__indicator-icon--like-active" width="20"
+                                     height="17">
                                     <use xlink:href="#icon-heart-active"></use>
                                 </svg>
                                 <span>0</span>

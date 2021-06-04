@@ -68,7 +68,7 @@ function get_content_excerpt(string $post_content): string
 {
     $exploded_post_string = explode(" ", $post_content);
     $string_length_counter = MAX_POST_STRING_LENGTH;
-    for ($i = 0, $j = count($exploded_post_string); $i < $j ; $i++) {
+    for ($i = 0, $j = count($exploded_post_string); $i < $j; $i++) {
         $string_length_counter -= strlen($exploded_post_string[$i]);
         if ($string_length_counter <= 0) {
             break;
@@ -89,8 +89,7 @@ require_once 'init.php';
 if (!$link) {
     $error = mysqli_connect_error();
     $content = include_template('error.php', ['error' => $error]);
-}
-else {
+} else {
     $sql = 'SELECT * FROM content_types';
     $result = mysqli_query($link, $sql);
 
@@ -108,8 +107,7 @@ else {
             $error = mysqli_error($link);
             $page_content = include_template('error.php', ['error' => $error]);
         }
-    }
-    else {
+    } else {
         $error = mysqli_error($link);
         $page_content = include_template('error.php', ['error' => $error]);
     }
@@ -119,4 +117,3 @@ else {
 $layout_content = include_template('layout.php', ['content' => $page_content, 'title' => $page_title, 'user_name' => $user_name, 'is_auth' => $is_auth]);
 
 print($layout_content);
-
