@@ -1,5 +1,4 @@
 <?php
-
 use JetBrains\PhpStorm\Pure;
 
 require_once('helpers.php');
@@ -68,7 +67,7 @@ function get_content_excerpt(string $post_content): string
 {
     $exploded_post_string = explode(" ", $post_content);
     $string_length_counter = MAX_POST_STRING_LENGTH;
-    for ($i = 0, $j = count($exploded_post_string); $i < $j ; $i++) {
+    for ($i = 0, $j = count($exploded_post_string); $i < $j; $i++) {
         $string_length_counter -= strlen($exploded_post_string[$i]);
         if ($string_length_counter <= 0) {
             break;
@@ -84,39 +83,44 @@ function get_content_excerpt(string $post_content): string
     return htmlspecialchars($str);
 }
 
+$content_type_id_selected = 0;
+$content_type_id_selected = filter_input(INPUT_GET, 'content-type');
+
 require_once 'init.php';
 
 if (!$link) {
     $error = mysqli_connect_error();
     $content = include_template('error.php', ['error' => $error]);
-}
-else {
+} else {
     $sql = 'SELECT * FROM content_types';
     $result = mysqli_query($link, $sql);
 
     if ($result) {
         $content_types_col = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
-        $sql = 'SELECT * FROM posts JOIN users ON post_author_id = user_id JOIN content_types ON post_type_id = content_type_id ORDER BY post_views_count DESC';
+        if ($content_type_id_selected) {
+            $sql = "SELECT * FROM posts JOIN users ON post_author_id = user_id JOIN content_types ON post_type_id = content_type_id WHERE post_type_id = $content_type_id_selected ORDER BY post_views_count DESC";
+        } else {
+            $sql = "SELECT * FROM posts JOIN users ON post_author_id = user_id JOIN content_types ON post_type_id = content_type_id ORDER BY post_views_count DESC";
+        }
+
         $result = mysqli_query($link, $sql);
 
         if ($result) {
             $posts_col = mysqli_fetch_all($result, MYSQLI_ASSOC);
             // HTML-код главной страницы
-            $page_content = include_template('main.php', ['posts' => $posts_col, 'content_types' => $content_types_col]);
+            $page_content = include_template('main.php', ['posts' => $posts_col, 'content_types' => $content_types_col, 'content_type_id_selected' => $content_type_id_selected]);
         } else {
             $error = mysqli_error($link);
             $page_content = include_template('error.php', ['error' => $error]);
         }
-    }
-    else {
+    } else {
         $error = mysqli_error($link);
         $page_content = include_template('error.php', ['error' => $error]);
     }
 }
 
 // окончательный HTML-код
-$layout_content = include_template('layout.php', ['content' => $page_content, 'title' => $page_title, 'user_name' => $user_name, 'is_auth' => $is_auth]);
+$layout_content = include_template('layout.php', ['content' => $page_content, 'modifier' => 'page__main--popular', 'title' => $page_title, 'user_name' => $user_name, 'is_auth' => $is_auth]);
 
 print($layout_content);
-
