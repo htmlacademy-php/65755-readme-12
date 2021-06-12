@@ -1,11 +1,12 @@
 <?php
+
 use JetBrains\PhpStorm\Pure;
 
-require_once('helpers.php');
+require_once 'helpers.php';
 
-define("MAX_POST_STRING_LENGTH", 300);
-define("DAYS_IN_WEEK", 7);
-define("MAX_WEEKS_DAYS", 5 * DAYS_IN_WEEK);
+const MAX_POST_STRING_LENGTH = 300;
+const DAYS_IN_WEEK = 7;
+const MAX_WEEKS_DAYS = DAYS_IN_WEEK * 5;
 
 $page_title = "readme: популярное";
 
@@ -49,7 +50,7 @@ function check_content_length(string $post_content): string
 {
     $is_excerpted = false;
 
-    if (strlen($post_content) > MAX_POST_STRING_LENGTH) {
+    if (mb_strlen($post_content) > MAX_POST_STRING_LENGTH) {
         $post_content = get_content_excerpt($post_content);
         $is_excerpted = true;
     }
@@ -68,7 +69,7 @@ function get_content_excerpt(string $post_content): string
     $exploded_post_string = explode(" ", $post_content);
     $string_length_counter = MAX_POST_STRING_LENGTH;
     for ($i = 0, $j = count($exploded_post_string); $i < $j; $i++) {
-        $string_length_counter -= strlen($exploded_post_string[$i]);
+        $string_length_counter -= mb_strlen($exploded_post_string[$i]);
         if ($string_length_counter <= 0) {
             break;
         }
@@ -92,35 +93,68 @@ if (!$link) {
     $error = mysqli_connect_error();
     $content = include_template('error.php', ['error' => $error]);
 } else {
-    $sql = 'SELECT * FROM content_types';
+    $sql = "SELECT * FROM content_types";
     $result = mysqli_query($link, $sql);
 
     if ($result) {
         $content_types_col = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
         if ($content_type_id_selected) {
-            $sql = "SELECT * FROM posts JOIN users ON post_author_id = user_id JOIN content_types ON post_type_id = content_type_id WHERE post_type_id = $content_type_id_selected ORDER BY post_views_count DESC";
+            $sql = "SELECT * FROM posts " .
+                "INNER JOIN users u ON post_author_id = u.id " .
+                "INNER JOIN content_types ct ON post_type_id = ct.id " .
+                "WHERE post_type_id = $content_type_id_selected " .
+                "ORDER BY post_views_count DESC";
         } else {
-            $sql = "SELECT * FROM posts JOIN users ON post_author_id = user_id JOIN content_types ON post_type_id = content_type_id ORDER BY post_views_count DESC";
+            $sql = "SELECT * FROM posts " .
+                "INNER JOIN users u ON post_author_id = u.id " .
+                "INNER JOIN content_types ct ON post_type_id = ct.id " .
+                "ORDER BY post_views_count DESC";
         }
 
         $result = mysqli_query($link, $sql);
 
         if ($result) {
             $posts_col = mysqli_fetch_all($result, MYSQLI_ASSOC);
-            // HTML-код главной страницы
-            $page_content = include_template('main.php', ['posts' => $posts_col, 'content_types' => $content_types_col, 'content_type_id_selected' => $content_type_id_selected]);
+            // HTML главной страницы
+            $page_content = include_template(
+                'main.php',
+                [
+                    'posts' => $posts_col,
+                    'content_types' => $content_types_col,
+                    'content_type_id_selected' => $content_type_id_selected
+                ]
+            );
         } else {
             $error = mysqli_error($link);
-            $page_content = include_template('error.php', ['error' => $error]);
+            $page_content = include_template(
+                'error.php',
+                [
+                    'error' => $error
+                ]
+            );
         }
     } else {
         $error = mysqli_error($link);
-        $page_content = include_template('error.php', ['error' => $error]);
+        $page_content = include_template(
+            'error.php',
+            [
+                'error' => $error
+            ]
+        );
     }
 }
 
-// окончательный HTML-код
-$layout_content = include_template('layout.php', ['content' => $page_content, 'modifier' => 'page__main--popular', 'title' => $page_title, 'user_name' => $user_name, 'is_auth' => $is_auth]);
+// Окончательный HTML
+$layout_content = include_template(
+    'layout.php',
+    [
+        'content' => $page_content,
+        'modifier' => 'page__main--popular',
+        'title' => $page_title,
+        'user_name' => $user_name,
+        'is_auth' => $is_auth
+    ]
+);
 
 print($layout_content);

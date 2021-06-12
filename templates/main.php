@@ -43,12 +43,16 @@
                 </li>
                 <?php foreach ($content_types as $content_type_key => $content_type) { ?>
                     <li class="popular__filters-item filters__item">
-                        <a class="filters__button filters__button--<?= $content_type['content_type_class'] ?> <?= $content_type['content_type_id'] == $content_type_id_selected ? "filters__button--active " : "" ?>button"
-                           href="index.php?content-type=<?= $content_type['content_type_id'] ?>">
-                            <span class="visually-hidden"><?= $content_type['content_type_name'] ?></span>
-                            <svg class="filters__icon" width="22" height="18">
-                                <use xlink:href="#icon-filter-<?= $content_type['content_type_class'] ?>"></use>
-                            </svg>
+                        <a
+                            class=
+                            "filters__button filters__button--<?= $content_type['content_type_class'] ?>
+                            <?= $content_type['id'] == $content_type_id_selected ? "filters__button--active " : "" ?>
+                            button"
+                            href="index.php?content-type=<?= $content_type['id'] ?>">
+                                <span class="visually-hidden"><?= $content_type['content_type_name'] ?></span>
+                                <svg class="filters__icon" width="22" height="18">
+                                    <use xlink:href="#icon-filter-<?= $content_type['content_type_class'] ?>"></use>
+                                </svg>
                         </a>
                     </li>
                 <?php } ?>
@@ -61,7 +65,7 @@
                 <header class="post__header">
                     <h2>
                         <!--здесь заголовок-->
-                        <a href="post.php?post_id=<?= $post['post_id'] ?>">
+                        <a href="post.php?post_id=<?= $post['id'] ?>">
                             <?= esc($post['post_title']) ?>
                         </a>
                     </h2>
