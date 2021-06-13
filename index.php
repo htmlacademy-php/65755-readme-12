@@ -91,7 +91,12 @@ require_once 'init.php';
 
 if (!$link) {
     $error = mysqli_connect_error();
-    $content = include_template('error.php', ['error' => $error]);
+    $content = include_template(
+        'error.php',
+        [
+            'error' => $error
+        ]
+    );
 } else {
     $sql = "SELECT * FROM content_types";
     $result = mysqli_query($link, $sql);
