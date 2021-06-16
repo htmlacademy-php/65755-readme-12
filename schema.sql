@@ -37,8 +37,8 @@ CREATE TABLE IF NOT EXISTS comments (
 
 CREATE TABLE IF NOT EXISTS likes (
   id BIGINT AUTO_INCREMENT PRIMARY KEY,
-  like_user_id BIGINT NOT NULL,
-  like_post_id BIGINT NOT NULL
+  like_post_id BIGINT NOT NULL,
+  like_user_id BIGINT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS subscriptions (

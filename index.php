@@ -3,16 +3,7 @@
 use JetBrains\PhpStorm\Pure;
 
 require_once 'helpers.php';
-
-const MAX_POST_STRING_LENGTH = 300;
-const DAYS_IN_WEEK = 7;
-const MAX_WEEKS_DAYS = DAYS_IN_WEEK * 5;
-
-$page_title = "readme: популярное";
-
-$is_auth = rand(0, 1);
-
-$user_name = 'Александр Батолло';
+require_once 'init.php';
 
 function get_human_time_diff(string $event_date): string
 {
@@ -84,10 +75,17 @@ function get_content_excerpt(string $post_content): string
     return htmlspecialchars($str);
 }
 
-$content_type_id_selected = 0;
-$content_type_id_selected = filter_input(INPUT_GET, 'content-type');
+const MAX_POST_STRING_LENGTH = 300;
+const DAYS_IN_WEEK = 7;
+const MAX_WEEKS_DAYS = DAYS_IN_WEEK * 5;
 
-require_once 'init.php';
+$page_title = "readme: популярное";
+$is_auth = rand(0, 1);
+$user_name = 'Александр Батолло';
+
+$content_type_id_selected = filter_input(INPUT_GET, 'content-type') ?? 0;
+$sorting_criteria_selected = filter_input(INPUT_GET, 'sorting_criteria') ?? 'post_views_count';
+$sorting_direction_selected = filter_input(INPUT_GET, 'sorting_direction') ?? 'DESC';
 
 if (!$link) {
     $error = mysqli_connect_error();
@@ -105,16 +103,20 @@ if (!$link) {
         $content_types_col = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
         if ($content_type_id_selected) {
-            $sql = "SELECT * FROM posts " .
+            $sql = "SELECT p.id, post_datetime, post_title, post_content, post_cite_author, " .
+                "post_featured_image, post_featured_video, post_views_count, user_login, " .
+                "user_avatar, content_type_class FROM posts p " .
                 "INNER JOIN users u ON post_author_id = u.id " .
                 "INNER JOIN content_types ct ON post_type_id = ct.id " .
                 "WHERE post_type_id = $content_type_id_selected " .
-                "ORDER BY post_views_count DESC";
+                "ORDER BY post_views_count $sorting_direction_selected";
         } else {
-            $sql = "SELECT * FROM posts " .
+            $sql = "SELECT p.id, post_datetime, post_title, post_content, post_cite_author, " .
+                "post_featured_image, post_featured_video, post_views_count, user_login, " .
+                "user_avatar, content_type_class FROM posts p " .
                 "INNER JOIN users u ON post_author_id = u.id " .
                 "INNER JOIN content_types ct ON post_type_id = ct.id " .
-                "ORDER BY post_views_count DESC";
+                "ORDER BY $sorting_criteria_selected $sorting_direction_selected";
         }
 
         $result = mysqli_query($link, $sql);
