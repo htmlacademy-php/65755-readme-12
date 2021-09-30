@@ -150,10 +150,10 @@
                                          alt="Аватар профиля">
                                 </div>
                                 <div class="header__profile-name">
-                  <span>
-                    <!--здесь должно быть имя пользователя-->
-                    <?= $user_name ?>
-                  </span>
+                                    <span>
+                                        <!--здесь должно быть имя пользователя-->
+                                        <?= $user_name ?>
+                                    </span>
                                     <svg class="header__link-arrow" width="10" height="6">
                                         <use xlink:href="#icon-arrow-right-ad"></use>
                                     </svg>
@@ -164,25 +164,25 @@
                                     <ul class="header__profile-nav">
                                         <li class="header__profile-nav-item">
                                             <a class="header__profile-nav-link" href="#">
-                        <span class="header__profile-nav-text">
-                          Мой профиль
-                        </span>
+                                                <span class="header__profile-nav-text">
+                                                  Мой профиль
+                                                </span>
                                             </a>
                                         </li>
                                         <li class="header__profile-nav-item">
                                             <a class="header__profile-nav-link" href="#">
-                        <span class="header__profile-nav-text">
-                          Сообщения
-                          <i class="header__profile-indicator">2</i>
-                        </span>
+                                                <span class="header__profile-nav-text">
+                                                  Сообщения
+                                                  <i class="header__profile-indicator">2</i>
+                                                </span>
                                             </a>
                                         </li>
 
                                         <li class="header__profile-nav-item">
                                             <a class="header__profile-nav-link" href="#">
-                        <span class="header__profile-nav-text">
-                          Выход
-                        </span>
+                                                <span class="header__profile-nav-text">
+                                                  Выход
+                                                </span>
                                             </a>
                                         </li>
                                     </ul>

@@ -1,3 +1,12 @@
+<?php
+
+$is_sorting_by_post_views_count_selected = isset($_GET['sorting_criteria']) && $_GET['sorting_criteria'] === 'post_views_count';
+$is_sorting_by_likes_selected = isset($_GET['sorting_criteria']) && $_GET['sorting_criteria'] === 'likes';
+$is_sorting_by_date_selected = isset($_GET['sorting_criteria']) && $_GET['sorting_criteria'] === 'post_datetime';
+
+$sorting_direction_selected = filter_input(INPUT_GET, 'sorting_direction') ?? 'DESC';
+
+?>
 <div class="container">
     <h1 class="page__title page__title--popular">Популярное</h1>
 </div>
@@ -7,7 +16,7 @@
             <b class="popular__sorting-caption sorting__caption">Сортировка:</b>
             <ul class="popular__sorting-list sorting__list">
                 <li class="sorting__item sorting__item--popular">
-                    <a class="sorting__link sorting__link--active" href="#">
+                    <a class="sorting__link<?= $is_sorting_by_post_views_count_selected ? ' sorting__link--active' : '' ?><?= $sorting_direction_selected === 'ASC' ? ' sorting__link--reverse' : '' ?>" href="index.php?sorting_criteria=post_views_count&sorting_direction=<?= $sorting_direction_selected === 'ASC' ? 'DESC' : 'ASC' ?>">
                         <span>Популярность</span>
                         <svg class="sorting__icon" width="10" height="12">
                             <use xlink:href="#icon-sort"></use>
@@ -15,7 +24,7 @@
                     </a>
                 </li>
                 <li class="sorting__item">
-                    <a class="sorting__link" href="#">
+                    <a class="sorting__link<?= $is_sorting_by_likes_selected ? ' sorting__link--active' : '' ?><?= $sorting_direction_selected === 'ASC' ? ' sorting__link--reverse' : '' ?>" href="index.php?sorting_criteria=likes&sorting_direction=<?= $sorting_direction_selected === 'ASC' ? 'DESC' : 'ASC' ?>">
                         <span>Лайки</span>
                         <svg class="sorting__icon" width="10" height="12">
                             <use xlink:href="#icon-sort"></use>
@@ -23,7 +32,7 @@
                     </a>
                 </li>
                 <li class="sorting__item">
-                    <a class="sorting__link" href="#">
+                    <a class="sorting__link<?= $is_sorting_by_date_selected ? ' sorting__link--active' : '' ?><?= $sorting_direction_selected === 'ASC' ? ' sorting__link--reverse' : '' ?>" href="index.php?sorting_criteria=post_datetime&sorting_direction=<?= $sorting_direction_selected === 'ASC' ? 'DESC' : 'ASC' ?>">
                         <span>Дата</span>
                         <svg class="sorting__icon" width="10" height="12">
                             <use xlink:href="#icon-sort"></use>
@@ -36,19 +45,27 @@
             <b class="popular__filters-caption filters__caption">Тип контента:</b>
             <ul class="popular__filters-list filters__list">
                 <li class="popular__filters-item popular__filters-item--all filters__item filters__item--all">
-                    <a class="filters__button filters__button--ellipse filters__button--all filters__button--active"
-                       href="#">
+                    <a class="
+                       filters__button
+                       filters__button--ellipse
+                       filters__button--all
+                       <?= $content_type_id_selected == 0 ? "filters__button--active" : "" ?>"
+                       href="index.php?content-type=0">
                         <span>Все</span>
                     </a>
                 </li>
                 <?php foreach ($content_types as $content_type_key => $content_type) { ?>
                     <li class="popular__filters-item filters__item">
-                        <a class="filters__button filters__button--<?= $content_type['content_type_class'] ?> <?= $content_type['content_type_id'] == $content_type_id_selected ? "filters__button--active " : "" ?>button"
-                           href="index.php?content-type=<?= $content_type['content_type_id'] ?>">
-                            <span class="visually-hidden"><?= $content_type['content_type_name'] ?></span>
-                            <svg class="filters__icon" width="22" height="18">
-                                <use xlink:href="#icon-filter-<?= $content_type['content_type_class'] ?>"></use>
-                            </svg>
+                        <a
+                            class=
+                            "filters__button filters__button--<?= $content_type['content_type_class'] ?>
+                            <?= $content_type['id'] == $content_type_id_selected ? "filters__button--active " : "" ?>
+                            button"
+                            href="index.php?content-type=<?= $content_type['id'] ?>">
+                                <span class="visually-hidden"><?= $content_type['content_type_name'] ?></span>
+                                <svg class="filters__icon" width="22" height="18">
+                                    <use xlink:href="#icon-filter-<?= $content_type['content_type_class'] ?>"></use>
+                                </svg>
                         </a>
                     </li>
                 <?php } ?>
@@ -61,7 +78,7 @@
                 <header class="post__header">
                     <h2>
                         <!--здесь заголовок-->
-                        <a href="post.php?post_id=<?= $post['post_id'] ?>">
+                        <a href="post.php?post_id=<?= $post['id'] ?>">
                             <?= esc($post['post_title']) ?>
                         </a>
                     </h2>
@@ -107,10 +124,9 @@
                         <!--содержимое для поста-видео-->
                         <div class="post-video__block">
                             <div class="post-video__preview">
-                                <?php embed_youtube_cover($post['post_content']); ?>
-                                <img src="img/coast-medium.jpg" alt="Превью к видео" width="360" height="188">
+                                <?= embed_youtube_cover($post['post_content']) ?>
                             </div>
-                            <a href="post-details.html" class="post-video__play-big button">
+                            <a href="post.php?post_id=<?= $post['id'] ?>"" class="post-video__play-big button">
                                 <svg class="post-video__play-big-icon" width="14" height="14">
                                     <use xlink:href="#icon-video-play-big"></use>
                                 </svg>
